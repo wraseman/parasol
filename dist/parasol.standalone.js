@@ -82,7 +82,7 @@
       return [min, max];
     }
 
-    function sequence(start, stop, step) {
+    function range(start, stop, step) {
       start = +start, stop = +stop, step = (n = arguments.length) < 2 ? (stop = start, start = 0, 1) : n < 3 ? 1 : +step;
 
       var i = -1,
@@ -5160,7 +5160,7 @@
         start += (stop - start - step * (n - paddingInner)) * align;
         bandwidth = step * (1 - paddingInner);
         if (round) start = Math.round(start), bandwidth = Math.round(bandwidth);
-        var values = sequence(n).map(function(i) { return start + step * i; });
+        var values = range(n).map(function(i) { return start + step * i; });
         return ordinalRange(reverse ? values.reverse() : values);
       }
 
@@ -5267,15 +5267,15 @@
       };
     }
 
-    function bimap(domain, range, deinterpolate, reinterpolate) {
-      var d0 = domain[0], d1 = domain[1], r0 = range[0], r1 = range[1];
+    function bimap(domain, range$$1, deinterpolate, reinterpolate) {
+      var d0 = domain[0], d1 = domain[1], r0 = range$$1[0], r1 = range$$1[1];
       if (d1 < d0) d0 = deinterpolate(d1, d0), r0 = reinterpolate(r1, r0);
       else d0 = deinterpolate(d0, d1), r0 = reinterpolate(r0, r1);
       return function(x) { return r0(d0(x)); };
     }
 
-    function polymap(domain, range, deinterpolate, reinterpolate) {
-      var j = Math.min(domain.length, range.length) - 1,
+    function polymap(domain, range$$1, deinterpolate, reinterpolate) {
+      var j = Math.min(domain.length, range$$1.length) - 1,
           d = new Array(j),
           r = new Array(j),
           i = -1;
@@ -5283,12 +5283,12 @@
       // Reverse descending domains.
       if (domain[j] < domain[0]) {
         domain = domain.slice().reverse();
-        range = range.slice().reverse();
+        range$$1 = range$$1.slice().reverse();
       }
 
       while (++i < j) {
         d[i] = deinterpolate(domain[i], domain[i + 1]);
-        r[i] = reinterpolate(range[i], range[i + 1]);
+        r[i] = reinterpolate(range$$1[i], range$$1[i + 1]);
       }
 
       return function(x) {
@@ -5309,7 +5309,7 @@
     // reinterpolate(a, b)(t) takes a parameter t in [0,1] and returns the corresponding domain value x in [a,b].
     function continuous(deinterpolate, reinterpolate) {
       var domain = unit,
-          range = unit,
+          range$$1 = unit,
           interpolate$$1 = interpolateValue,
           clamp = false,
           piecewise$$1,
@@ -5317,17 +5317,17 @@
           input;
 
       function rescale() {
-        piecewise$$1 = Math.min(domain.length, range.length) > 2 ? polymap : bimap;
+        piecewise$$1 = Math.min(domain.length, range$$1.length) > 2 ? polymap : bimap;
         output = input = null;
         return scale;
       }
 
       function scale(x) {
-        return (output || (output = piecewise$$1(domain, range, clamp ? deinterpolateClamp(deinterpolate) : deinterpolate, interpolate$$1)))(+x);
+        return (output || (output = piecewise$$1(domain, range$$1, clamp ? deinterpolateClamp(deinterpolate) : deinterpolate, interpolate$$1)))(+x);
       }
 
       scale.invert = function(y) {
-        return (input || (input = piecewise$$1(range, domain, deinterpolateLinear, clamp ? reinterpolateClamp(reinterpolate) : reinterpolate)))(+y);
+        return (input || (input = piecewise$$1(range$$1, domain, deinterpolateLinear, clamp ? reinterpolateClamp(reinterpolate) : reinterpolate)))(+y);
       };
 
       scale.domain = function(_) {
@@ -5335,11 +5335,11 @@
       };
 
       scale.range = function(_) {
-        return arguments.length ? (range = slice$5.call(_), rescale()) : range.slice();
+        return arguments.length ? (range$$1 = slice$5.call(_), rescale()) : range$$1.slice();
       };
 
       scale.rangeRound = function(_) {
-        return range = slice$5.call(_), interpolate$$1 = interpolateRound, rescale();
+        return range$$1 = slice$5.call(_), interpolate$$1 = interpolateRound, rescale();
       };
 
       scale.clamp = function(_) {
@@ -5630,8 +5630,6 @@
     var saturday = weekday(6);
 
     var sundays = sunday.range;
-    var mondays = monday.range;
-    var thursdays = thursday.range;
 
     var month = newInterval(function(date) {
       date.setDate(1);
@@ -5721,8 +5719,6 @@
     var utcSaturday = utcWeekday(6);
 
     var utcSundays = utcSunday.range;
-    var utcMondays = utcMonday.range;
-    var utcThursdays = utcThursday.range;
 
     var utcMonth = newInterval(function(date) {
       date.setUTCDate(1);
@@ -8085,9 +8081,9 @@
               acc[cur] = [];
             } else {
               acc[cur] = axisBrushes.reduce(function (d, p, i) {
-                var range = brushSelection(document.getElementById('brush-' + pos + '-' + i));
-                if (range !== null) {
-                  d = d.push(range);
+                var range$$1 = brushSelection(document.getElementById('brush-' + pos + '-' + i));
+                if (range$$1 !== null) {
+                  d = d.push(range$$1);
                 }
 
                 return d;
@@ -10645,6 +10641,8 @@
 
       return pc;
     };
+
+    // TODO: add documentation info here. add more detail about config.
 
     /**
      * Setup a new visualization.
@@ -24113,7 +24111,7 @@
      * _.range(0);
      * // => []
      */
-    var range$1 = createRange();
+    var range$2 = createRange();
 
     /**
      * This method is like `_.range` except that it populates values in
@@ -27787,7 +27785,7 @@
       defaultTo, flow, flowRight, identity: identity$9, iteratee,
       matches, matchesProperty, method, methodOf, mixin,
       noop: noop$4, nthArg, over, overEvery, overSome,
-      property, propertyOf, range: range$1, rangeRight, stubArray,
+      property, propertyOf, range: range$2, rangeRight, stubArray,
       stubFalse, stubObject, stubString, stubTrue, times,
       toPath, uniqueId
     };
@@ -28542,6 +28540,8 @@
      * Copyright Jeremy Ashkenas, DocumentCloud and Investigative Reporters & Editors
      */
 
+    // TODO: add documentation info here. are there any parameters?
+
     // synchronize data between linked components
     var sync = function sync(config, ps, flags) {
       return function () {
@@ -28584,7 +28584,13 @@
       };
     };
 
-    // link brush activity between user specified charts, and grid if it exists
+    /**
+     * Link brush activity between user specified charts and grid, if it exists
+     *
+     * @param {Object} chartIDs - specify array of chart indices which should be linked.
+     * For example, chartIDs = [0,1] would link the first two charts.
+     */
+
     var linked = function linked(config, ps, flags) {
       return function () {
         var chartIDs = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : [];
@@ -32351,7 +32357,7 @@
           probabilities: probabilities[0]
         });
 
-        const candidates = X.selection(candidateIdx, range$2(X[0].length));
+        const candidates = X.selection(candidateIdx, range$3(X[0].length));
         const distanceToCandidates = euclidianDistances(candidates, X);
 
         let bestCandidate;
@@ -32388,7 +32394,7 @@
       return result;
     }
 
-    function range$2(l) {
+    function range$3(l) {
       let r = [];
       for (let i = 0; i < l; i++) {
         r.push(i);
@@ -32771,18 +32777,33 @@
       return csvParse(csvFormat(data));
     };
 
+    // specify default parameters with default values using JSDoc syntax
+    // source: http://usejsdoc.org/tags-param.html#optional-parameters-and-default-values
+
     /**
      * Partition data into k clusters in which each data element belongs to
      * the cluster with the nearest mean.
      *
-     * @param k number of clusters
-     * @param chartIDs charts that will display cluster colors
-     * @param palette d3 palette or function mapping cluster ids to color
-     * @param vars variables used for clustering. NOTE: var data must be numeric
-     * @param std convert values to zscores to obtain unbiased clusters
-     * @param options ml-kmeans options
-     * @param hidden determines whether cluster axis will be displayed on charts (can be individually updated later)
+     * @param {number} k - number of clusters
+     * @param {Object} chartIDs - charts that will display cluster colors
+     * @param {Object} [palette = d3.schemeCategory10] - d3 categorical color palette mapping cluster ids to color
+     * see {@link https://github.com/d3/d3-scale-chromatic#categorical} for complete list
+     * @param {Object} [vars = null] - variables used for clustering. NOTE: var data must be numeric
+     * @param {boolean} [std = true] - convert values to zscores to obtain unbiased clusters
+     * @param {object} [options] - Option object
+     * @param {number} [options.maxIterations = 100] - Maximum of iterations allowed
+     * @param {number} [options.tolerance = 1e-6] - Error tolerance
+     * @param {boolean} [options.withIterations = false] - Store clusters and centroids for each iteration
+     * @param {function} [options.distanceFunction = squaredDistance] - Distance function to use between the points (from ml-distance-euclidean)
+     * @param {number} [options.seed] - Seed for random initialization.
+     * @param {string|Array<Array<number>>} [options.initialization = 'kmeans++'] - K centers in format [x,y,z,...] or a method for initialize the data:
+     *  * You can either specify your custom start centroids, or select one of the following initialization method:
+     *  * `'kmeans++'` will use the kmeans++ method as described by http://ilpubs.stanford.edu:8090/778/1/2006-13.pdf
+     *  * `'random'` will choose K random different values.
+     *  * `'mostDistant'` will choose the more distant points to a first random pick
+     * @param {boolean} [hidden = true] - determines whether cluster axis will be displayed on charts (can be individually updated later)
      */
+
     var cluster$1 = function cluster$$1(config, ps, flags) {
       return function (k) {
         var chartIDs = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : [];
@@ -32792,18 +32813,23 @@
         var std = arguments.length > 5 && arguments[5] !== undefined ? arguments[5] : true;
         var hidden = arguments.length > 6 && arguments[6] !== undefined ? arguments[6] : true;
 
+
         if (palette === null) {
+          // if no palette specified, default to schemeCategory10
           var scheme$$1 = ordinal(schemeCategory10);
           palette = function palette(d) {
             return scheme$$1(Number(d['cluster']));
           };
-        } else if (typeof palette == 'string') {
+          // } else if (typeof(palette) == 'string') {
+          //   const scheme = scaleOrdinal(palette);
+          //   palette = d => scheme(Number(d['cluster']));
+        } else {
+          // otherwise, use a categorical d3 palette from d3-scale-chromatic
+          // for example, d3.schemeAccent, d3.schemeDark2, d3.schemePaired...
           var _scheme = ordinal(palette);
           palette = function palette(d) {
             return _scheme(Number(d['cluster']));
           };
-        } else {
-          palette = palette;
         }
 
         if (vars === null) {
@@ -32852,6 +32878,7 @@
         }));
         console.log(result.centroids);
 
+        // TODO: this isn't working correctly, cluster axis still shown
         // hide cluster axis and show colors by default
         if (hidden == true) {
           Object.keys(config.partition).forEach(function (id) {
@@ -32906,9 +32933,9 @@
      * Compute individual aggregate scores for each solution based on
      * user specified weights
      *
-     * @param weights object specififying weight of each variable, unspecified variables will be assigned weight 0
-     * @param chartIDs charts that will display 'aggregate score' variable
-     * @param norm normalize values (0-1) to obtain fair weighting
+     * @param {Object} weights - object specififying weight of each variable, unspecified variables will be assigned weight 0
+     * @param {Object} chartIDs - charts that will display 'aggregate score' variable
+     * @param {number} norm - normalize values (0-1) to obtain fair weighting
      */
     var aggregateScores = function aggregateScores(config, ps, flags) {
       return function (weights) {
@@ -32984,13 +33011,11 @@
     /**
      * Hide a set of axes globally or from specific charts
      *
-     * @param partition: array or object idenifying axes to be hidden; if object, format as { chart id: [hidden vars]}
+     * @param {Object|Array} partition - array or object idenifying axes to be hidden;
+     * if object, format as { chart id: [hidden vars]}.
      */
     var hideAxes = function hideAxes(config, ps, flags) {
       return function (partition) {
-        console.log(partition);
-        console.log(config.partition);
-
         if (Array.isArray(partition)) {
           // append array to every key in config.partition
           Object.keys(config.partition).forEach(function (id) {
@@ -33011,8 +33036,6 @@
           console.log('Error: please provide an object or array as argument.');
         }
 
-        console.log(config.partition);
-
         // iterate over partition keys and hide all variables in value array
         Object.entries(config.partition).forEach(function (_ref3) {
           var _ref4 = slicedToArray(_ref3, 2),
@@ -33030,13 +33053,11 @@
     /**
      * Show a set of axes globally or on specific charts
      *
-     * @param partition: array or object idenifying axes to be shown; if object, format as { chart id: [vars to show]}
+     * @param {Object|Array} partition - array or object idenifying axes to be shown;
+     * if object, format as { chart id: [vars to show]}
      */
     var showAxes = function showAxes(config, ps, flags) {
       return function (partition) {
-        console.log(partition);
-        console.log(config.partition);
-
         if (typeof partition === 'undefined') {
           // show all axes on all charts (empty partition)
           Object.keys(config.partition).forEach(function (id) {
@@ -33063,8 +33084,6 @@
           console.log('Error: please provide an object or array as argument.');
         }
 
-        console.log(config.partition);
-
         // iterate over partition keys and hide only remaining variables in value array
         Object.entries(config.partition).forEach(function (_ref3) {
           var _ref4 = slicedToArray(_ref3, 2),
@@ -33082,8 +33101,7 @@
     /**
      * Keep only selected data update components
      *
-     * @param selection: One of {'brushed', 'marked', 'both'} keywords as string
-     *
+     * @param {string} selection - one of {'brushed', 'marked', 'both'} keywords as string.
      * NOTE: Any existing brushes or marks will be overwritten
      */
     var keepSelection = function keepSelection(config, ps, flags) {
@@ -33129,9 +33147,8 @@
     /**
      * Remove selected data and components
      *
-     * @param selection: One of {'brushed', 'marked', 'both'} keywords as string
-     *
-     * NOTE: Any existing brushes or marks will be overwritten
+     * @param {string} selection - one of {'brushed', 'marked', 'both'} keywords as string.
+     * NOTE: any existing brushes or marks will be overwritten
      */
     var removeSelection = function removeSelection(config, ps, flags) {
       return function (selection) {
@@ -33370,8 +33387,8 @@
     /**
      * Export selected data to new csv and download
      *
-     * @param selection: {string} one of {'brushed', 'marked', 'both', 'all'}
-     * @param filename: {string} name of csv file to be downloaded
+     * @param {string} selection - choose from {'brushed', 'marked', 'both', 'all'}
+     * @param {string} filename - name of csv file to be downloaded
      */
     var exportData = function exportData(config, ps, flags) {
       return function () {
@@ -33414,6 +33431,8 @@
     // reset listed brushes and preform necessary updates
     // NOTE: why is this so slow?
 
+    // TODO: add documentation info here
+
     var globalBrushReset = function globalBrushReset(config, ps, flags) {
       return function (charts) {
         if (Array.isArray(charts)) {
@@ -33435,6 +33454,8 @@
       };
     };
 
+    // TODO: add documentation info here
+
     // reset marks and preform necessary updates
     var globalMarkReset = function globalMarkReset(config, ps, flags) {
       return function (charts) {
@@ -33454,9 +33475,8 @@
     /**
      * Selections are the collection of all brushed and marked data; reset all or just a subset -- brushed or marked
      *
-     * @param selection: One of {'brushed', 'marked', 'both'} keywords as string
-     *
-     * NOTE: only linked charts are affected
+     * @param {string} selection - one of {'brushed', 'marked', 'both'} keywords as string.
+     * NOTE: only linked charts are affected.
      */
     var resetSelections = function resetSelections(config, ps, flags) {
       return function (selection) {

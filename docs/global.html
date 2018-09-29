@@ -112,7 +112,8 @@
 
 
 <div class="description">
-    Compute individual aggregate scores for each solution based onuser specified weights
+    Compute individual aggregate scores for each solution based on
+user specified weights
 </div>
 
 
@@ -293,7 +294,8 @@
 
 
 <div class="description">
-    Partition data into k clusters in which each data element belongs tothe cluster with the nearest mean.
+    Partition data into k clusters in which each data element belongs to
+the cluster with the nearest mean.
 </div>
 
 
@@ -435,7 +437,8 @@
                 </td>
             
 
-            <td class="description last">d3 categorical color palette mapping cluster ids to colorsee <a href="https://github.com/d3/d3-scale-chromatic#categorical">https://github.com/d3/d3-scale-chromatic#categorical</a> for complete list</td>
+            <td class="description last">d3 categorical color palette mapping cluster ids to color
+see <a href="https://github.com/d3/d3-scale-chromatic#categorical">https://github.com/d3/d3-scale-chromatic#categorical</a> for complete list</td>
         </tr>
 
     
@@ -808,7 +811,11 @@
                 </td>
             
 
-            <td class="description last">K centers in format [x,y,z,...] or a method for initialize the data: * You can either specify your custom start centroids, or select one of the following initialization method: * `'kmeans++'` will use the kmeans++ method as described by http://ilpubs.stanford.edu:8090/778/1/2006-13.pdf * `'random'` will choose K random different values. * `'mostDistant'` will choose the more distant points to a first random pick</td>
+            <td class="description last">K centers in format [x,y,z,...] or a method for initialize the data:
+ * You can either specify your custom start centroids, or select one of the following initialization method:
+ * `'kmeans++'` will use the kmeans++ method as described by http://ilpubs.stanford.edu:8090/778/1/2006-13.pdf
+ * `'random'` will choose K random different values.
+ * `'mostDistant'` will choose the more distant points to a first random pick</td>
         </tr>
 
     
@@ -929,7 +936,7 @@
     
 
     
-    <h4 class="name" id="exportData"><span class="type-signature"></span>exportData<span class="signature">(selection:, filename:)</span><span class="type-signature"></span></h4>
+    <h4 class="name" id="exportData"><span class="type-signature"></span>exportData<span class="signature">(selection, filename)</span><span class="type-signature"></span></h4>
     
 
     
@@ -973,7 +980,7 @@
 
         <tr>
             
-                <td class="name"><code>selection:</code></td>
+                <td class="name"><code>selection</code></td>
             
 
             <td class="type">
@@ -989,14 +996,14 @@
 
             
 
-            <td class="description last">one of {'brushed', 'marked', 'both', 'all'}</td>
+            <td class="description last">choose from {'brushed', 'marked', 'both', 'all'}</td>
         </tr>
 
     
 
         <tr>
             
-                <td class="name"><code>filename:</code></td>
+                <td class="name"><code>filename</code></td>
             
 
             <td class="type">
@@ -1150,7 +1157,8 @@
 
             
 
-            <td class="description last">array or object idenifying axes to be hidden;if object, format as { chart id: [hidden vars]}.</td>
+            <td class="description last">array or object idenifying axes to be hidden;
+if object, format as { chart id: [hidden vars]}.</td>
         </tr>
 
     
@@ -1321,7 +1329,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="init.js.html">init.js</a>, <a href="init.js.html#line10">line 10</a>
+        <a href="init.js.html">init.js</a>, <a href="init.js.html#line12">line 12</a>
     </li></ul></dd>
     
 
@@ -1437,7 +1445,8 @@
 
             
 
-            <td class="description last">one of {'brushed', 'marked', 'both'} keywords as stringNOTE: Any existing brushes or marks will be overwritten</td>
+            <td class="description last">one of {'brushed', 'marked', 'both'} keywords as string.
+NOTE: Any existing brushes or marks will be overwritten</td>
         </tr>
 
     
@@ -1478,7 +1487,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="keepSelection.js.html">keepSelection.js</a>, <a href="keepSelection.js.html#line8">line 8</a>
+        <a href="keepSelection.js.html">keepSelection.js</a>, <a href="keepSelection.js.html#line7">line 7</a>
     </li></ul></dd>
     
 
@@ -1572,7 +1581,8 @@
 
             
 
-            <td class="description last">specify array of chart indices which should be linked.For example, chartIDs = [0,1] would link the first two charts.</td>
+            <td class="description last">specify array of chart indices which should be linked.
+For example, chartIDs = [0,1] would link the first two charts.</td>
         </tr>
 
     
@@ -1707,7 +1717,8 @@
 
             
 
-            <td class="description last">one of {'brushed', 'marked', 'both'} keywords as stringNOTE: Any existing brushes or marks will be overwritten</td>
+            <td class="description last">one of {'brushed', 'marked', 'both'} keywords as string.
+NOTE: any existing brushes or marks will be overwritten</td>
         </tr>
 
     
@@ -1748,7 +1759,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="removeSelection.js.html">removeSelection.js</a>, <a href="removeSelection.js.html#line10">line 10</a>
+        <a href="removeSelection.js.html">removeSelection.js</a>, <a href="removeSelection.js.html#line9">line 9</a>
     </li></ul></dd>
     
 
@@ -1842,7 +1853,8 @@
 
             
 
-            <td class="description last">one of {'brushed', 'marked', 'both'} keywords as stringNOTE: only linked charts are affected</td>
+            <td class="description last">one of {'brushed', 'marked', 'both'} keywords as string.
+NOTE: only linked charts are affected.</td>
         </tr>
 
     
@@ -1883,7 +1895,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="resetSelections.js.html">resetSelections.js</a>, <a href="resetSelections.js.html#line8">line 8</a>
+        <a href="resetSelections.js.html">resetSelections.js</a>, <a href="resetSelections.js.html#line7">line 7</a>
     </li></ul></dd>
     
 
@@ -1980,7 +1992,8 @@
 
             
 
-            <td class="description last">array or object idenifying axes to be shown;if object, format as { chart id: [vars to show]}</td>
+            <td class="description last">array or object idenifying axes to be shown;
+if object, format as { chart id: [vars to show]}</td>
         </tr>
 
     
@@ -2071,7 +2084,7 @@
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.5.5</a> on Fri Sep 21 2018 16:07:26 GMT-0600 (Mountain Daylight Time)
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.5.5</a> on Mon Sep 24 2018 18:37:51 GMT-0600 (Mountain Daylight Time)
 </footer>
 
 <script> prettyPrint(); </script>
