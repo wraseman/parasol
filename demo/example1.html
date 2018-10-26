@@ -1,0 +1,66 @@
+<!doctype html>
+<head>
+    <meta content="text/html;charset=utf-8" http-equiv="Content-Type">
+    <meta content="utf-8" http-equiv="encoding">
+</head>
+
+<title>Example 1</title>
+
+<!-- TODO: add parasol.css -->
+<link rel="stylesheet" type="text/css" href="./parcoords.css">
+<link rel="stylesheet" type="text/css" href="style.css">
+
+<script src="./lib/d3.v5.min.js"></script>
+<script src="./parasol.standalone.js"></script>
+
+<body>
+<h1> Linked plots with buttons for filtering and exporting data</h1>
+<p>
+    <button id="reset_brushes">Reset Brushes</button>
+    <button id="keep_brushed">Keep Brushed Data</button>
+    <button id="remove_brushed">Remove Brushed Data</button>
+    <button id="export_brushed">Export Brushed Data</button>
+</p>
+<div id="plot01" class="parcoords" style="height:200px; width:800px;"></div>
+<div id="plot02" class="parcoords" style="height:200px; width:800px;"></div>
+</body>
+
+<script>
+d3.csv('data/cars_no-name.csv').then(function(data) {
+  // initialize chart closures
+  var ps = Parasol(data)('.parcoords');
+
+  // initially, all data is shown on both plots. determine which data to hide on each plot
+  var axes_to_hide = {
+      0: ['economy (mpg)', 'cylinders', 'displacement (cc)'],  // hidden from first plot
+      1: ['power (hp)']   // hidden from second plot
+    }
+  // apply Parasol API
+  ps.linked()
+    .hideAxes(axes_to_hide);
+
+  // apply Parcoords API
+  ps.charts.forEach(
+    (pc) => {
+      pc.alpha(0.1)
+        .reorderable()
+        .render();
+    }
+  )
+
+  // activate buttons
+  d3.select('#reset_brushes').on('click', function() {
+    ps.resetSelections('brushed')
+  });
+  d3.select('#keep_brushed').on('click', function() {
+    ps.keepData('brushed')
+  });
+  d3.select('#remove_brushed').on('click', function() {
+    ps.removeData('brushed')
+  });
+  d3.select('#export_brushed').on('click', function() {
+    ps.exportData('brushed', 'data.csv')
+  });
+
+});
+</script>
