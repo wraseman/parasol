@@ -16,6 +16,7 @@
 <link rel="stylesheet" href="./lib/slickgrid/plugins/slick.columnpicker.css" type="text/css"/>
 
 <script src="./lib/d3.v5.min.js"></script>
+<script src="./lib/slyvester.js"></script>
 <script src="./parasol.standalone.js"></script>
 
 <body>
@@ -28,6 +29,12 @@
     Horsepower - weight: <br> <input type="range" min="0" max="10" id="power_weight"> <br>
   </form>
   <br> <button id="apply_weights"> <b> Apply Weights </b> </button>
+</p>
+<p>
+  <form>
+    Curve smoothness: <br> <input type="range" min="0" max="25" value="0" id="smoothness"> <br>
+    Bundling strength (bundles calculated for Displacement): <br> <input type="range" min="0" max="100" value="0" id="bundling"> <br>
+  </form>
 </p>
 
 <div id="plot01" class="parcoords" style="height:300px; width:800px;"></div>
@@ -42,6 +49,7 @@ d3.csv('data/cars_no-name.csv').then(function(data) {
   var ps = Parasol(data)('.parcoords')
             .attachGrid({container: '#grid'})
             .linked()
+            .cluster({k: 4, hidden: false})
             // .hideAxes(['economy (mpg)'])
             // .hideAxes(['cylinders'])
             // .hideAxes(['displacement (cc)'])
@@ -62,11 +70,24 @@ d3.csv('data/cars_no-name.csv').then(function(data) {
       'power (hp)': document.getElementById('power_weight').value
     };
 
-    // console.log(document.getElementById('econ_weight').value);
-
     ps.aggregateScores({ weights: weights });
     update_and_render(ps)
   });
+
+  // bundling strength slider
+  d3.select('#bundling').on('input', function() {
+    ps.charts[0]
+      .bundlingStrength(this.value/100)
+      .bundleDimension('cluster')
+      .render();  // divide by a hundred to get decimals
+  });
+
+  // smoothness
+  d3.select("#smoothness").on('input', function() {
+    ps.charts[0].smoothness(this.value/100).render();  // divide by a hundred to get decimals
+
+  });
+
 });
 
 function update_and_render(ps) {

@@ -43,7 +43,7 @@ Fuel Economy (mpg): 9 to 50 <br>
 // linear color scale
 var green_gradient = d3.scaleLinear()
   .domain([9, 50])  // range of fuel economy data
-  .range([d3.rgb(229,245,249), d3.rgb(44,162,95)])  // 
+  .range([d3.rgb(229,245,249), d3.rgb(44,162,95)])  //
   .interpolate(d3.interpolateLab);
 
 d3.csv('data/cars_no-name.csv').then(function(data) {
