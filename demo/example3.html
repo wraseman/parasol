@@ -20,25 +20,47 @@
 <script src="./parasol.standalone.js"></script>
 
 <body>
-<h1> Weighted scoring of features </h1>
-<p>
-  <form>
-    Fuel Economy - weight: <br> <input type="range" min="0" max="10" id="econ_weight"> <br>
-    # of Cylinders - weight: <br> <input type="range" min="0" max="10" id="cyl_weight"> <br>
-    Displacement - weight: <br> <input type="range" min="0" max="10" id="displ_weight"> <br>
-    Horsepower - weight: <br> <input type="range" min="0" max="10" id="power_weight"> <br>
-  </form>
-  <br> <button id="apply_weights"> <b> Apply Weights </b> </button>
-</p>
-<p>
-  <form>
-    Curve smoothness: <br> <input type="range" min="0" max="25" value="0" id="smoothness"> <br>
-    Bundling strength (bundles calculated for Displacement): <br> <input type="range" min="0" max="100" value="0" id="bundling"> <br>
-  </form>
-</p>
 
-<div id="plot01" class="parcoords" style="height:300px; width:800px;"></div>
-<div id="grid" style="width:100%;height:500px;" class="slickgrid-container"></div>
+<h1> Weighted sum method and bundling using clusters </h1>
+  <div style="width: 100%; overflow: hidden;">
+    <div style="width: 400px; float: left;">
+        <form onSubmit="return false;">
+          Fuel Economy - weight: <br>
+          <input type="number" id="econ_weight_text" step="0.01" min="0" max="1"
+            value="0.5" onchange="updateEconSlider(this.value);">
+          <input type="range" id="econ_weight_slider" step="0.01" min="0" max="1"
+            value="0.5" onchange="updateEconText(this.value);">
+        </form>
+        <form onSubmit="return false;">
+          # of Cylinders - weight: <br>
+          <input type="number" id="cyl_weight_text" step="0.01" min="0" max="1"
+            value="0.5" onchange="updateCylSlider(this.value);">
+          <input type="range" id="cyl_weight_slider" step="0.01" min="0" max="1"
+            value="0.5" onchange="updateCylText(this.value);">
+        </form>
+        <form onSubmit="return false;">
+          Displacement - weight: <br>
+          <input type="number" id="displ_weight_text" step="0.01" min="0" max="1"
+            value="0.5" onchange="updateDisplSlider(this.value);">
+          <input type="range" id="displ_weight_slider" step="0.01" min="0" max="1"
+            value="0.5" onchange="updateDisplText(this.value);">
+        </form>
+        <form onSubmit="return false;">
+          Horsepower - weight: <br>
+          <input type="number" id="power_weight_text" step="0.01" min="0" max="1"
+            value="0.5" onchange="updatePowerSlider(this.value);">
+          <input type="range" id="power_weight_slider" step="0.01" min="0" max="1"
+            value="0.5" onchange="updatePowerText(this.value);">
+        </form>
+        <br> <button id="apply_weights"> <b> Apply Weights </b> </button>
+    </div>
+    <div style="margin-left: 250px;">
+    Curve smoothness: <br> <input type="range" min="0" max="25" value="0" id="smoothness"> <br>
+    Bundling strength for clusters: <br> <input type="range" min="0" max="100" value="0" id="bundling"> <br>
+    </div>
+  </div> <br>
+  <div id="plot01" class="parcoords" style="height:300px; width:800px;"></div>
+  <div id="grid" style="width:100%;height:500px;" class="slickgrid-container"></div>
 </body>
 
 <script>
@@ -58,20 +80,20 @@ d3.csv('data/cars_no-name.csv').then(function(data) {
             .hideAxes(['0-60 mph (s)'])
             // .hideAxes(['year'])
 
-  ps = update_and_render(ps);
+  ps = update_and_render_plots(ps);
 
-  // activate button
+  // apply weights
   d3.select('#apply_weights').on('click', function() {
     // setup weights (unspecified vars given weight = 0)
     var weights = {
-      'economy (mpg)': document.getElementById('econ_weight').value,
-      'cylinders': document.getElementById('cyl_weight').value,
-      'displacement (cc)': document.getElementById('displ_weight').value,
-      'power (hp)': document.getElementById('power_weight').value
+      'economy (mpg)': d3.select("#econ_weight_slider").property("value"),
+      'cylinders': d3.select("#cyl_weight_slider").property("value"),
+      'displacement (cc)': d3.select("#displ_weight_slider").property("value"),
+      'power (hp)': d3.select("#power_weight_slider").property("value")
     };
 
     ps.aggregateScores({ weights: weights });
-    update_and_render(ps)
+    update_and_render_plots(ps)
   });
 
   // bundling strength slider
@@ -85,16 +107,46 @@ d3.csv('data/cars_no-name.csv').then(function(data) {
   // smoothness
   d3.select("#smoothness").on('input', function() {
     ps.charts[0].smoothness(this.value/100).render();  // divide by a hundred to get decimals
-
   });
-
 });
 
-function update_and_render(ps) {
+// update fuel economy slider and textbox
+function updateEconText(value) {
+  d3.select("#econ_weight_text").property("value", value)  // adjust textbox value to reflect slider input
+}
+function updateEconSlider(value) {
+    d3.select("#econ_weight_slider").property("value", value)  // adjust slider value to reflect textbox input
+}
+
+// update number of cylinders slider and textbox
+function updateCylText(value) {
+  d3.select("#cyl_weight_text").property("value", value)  // adjust textbox value to reflect slider input
+}
+function updateCylSlider(value) {
+    d3.select("#cyl_weight_slider").property("value", value)  // adjust slider value to reflect textbox input
+}
+
+// update displacement slider and textbox
+function updateDisplText(value) {
+  d3.select("#displ_weight_text").property("value", value)  // adjust textbox value to reflect slider input
+}
+function updateDisplSlider(value) {
+    d3.select("#displ_weight_slider").property("value", value)  // adjust slider value to reflect textbox input
+}
+
+// update horsepower slider and textbox
+function updatePowerText(value) {
+  d3.select("#power_weight_text").property("value", value)  // adjust textbox value to reflect slider input
+}
+function updatePowerSlider(value) {
+    d3.select("#power_weight_slider").property("value", value)  // adjust slider value to reflect textbox input
+}
+
+function update_and_render_plots(ps) {
   // apply Parcoords API to update and render plots
   ps.charts.forEach(
     (pc) => {
-        pc.alpha(0.1)  // change transparency
+        pc.alpha(0.05)  // change transparency
         .reorderable()  // make axes dynamically reorderable
         .render()
         .updateAxes(0);
