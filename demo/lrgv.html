@@ -1,0 +1,172 @@
+<!doctype html>
+<head>
+    <meta content="text/html;charset=utf-8" http-equiv="Content-Type">
+    <meta content="utf-8" http-equiv="encoding">
+</head>
+
+<title>LRGV Exploratory Analysis</title>
+
+<!-- TODO: update with combined css: parasol.css -->
+<link rel="stylesheet" type="text/css" href="./parcoords.css">
+<link rel="stylesheet" type="text/css" href="style.css">
+
+<!-- include slickgrid stylesheets -->
+<link rel="stylesheet" href="./lib/slickgrid/slick.grid.css" type="text/css" media="screen" charset="utf-8">
+<link rel="stylesheet" href="./lib/slickgrid/jquery-ui-1.8.16.custom.css" type="text/css" />
+<link rel="stylesheet" href="./lib/slickgrid/plugins/slick.columnpicker.css" type="text/css"/>
+
+<script src="./lib/d3.v5.min.js"></script>
+<script src="./lib/slyvester.js"></script>
+<script src="./parasol.standalone.js"></script>
+
+<body>
+
+<h1> LRGV </h1>
+  <p> Variables to include in clustering: <br>
+  <input type="checkbox" id="obj_box" checked> Objectives <br>
+  <input type="checkbox" id="dec_box" checked> Decisions <br>
+  <button id="cluster_button">Perform clustering</button>
+  <!-- <div>
+  Curve smoothness: <br> <input type="range" min="0" max="25" value="0" id="smoothness"> <br>
+  Bundling strength for clusters: <br> <input type="range" min="0" max="100" value="0" id="bundling"> <br>
+  </div> -->
+  <h2> Objectives </h2>
+  <div id="plot01" class="parcoords" style="height:300px; width:800px;"></div>
+  <h2> Decisions </h2>
+  <div id="plot02" class="parcoords" style="height:300px; width:800px;"></div>
+  <div id="grid" style="width:100%;height:500px;" class="slickgrid-container"></div>
+</body>
+
+<script>
+// read in data and create visualization
+d3.csv('data/lrgv.csv').then(function(data) {
+
+  // var axes_to_hide = {
+  //     0: ['rights', 'options_lo', 'options_high', 'xi', 'alpha', 'beta', 'alpha2', 'beta2'],  // hidden from first plot
+  //     1: ['rel', 'crit_rel', 'num_leases', 'surplus', 'drop', 'cost', 'cost_var', 'dr_trans']   // hidden from second plot
+  //   }
+
+  // specify layout
+  var axes_to_hide = {
+      0: ['rights', 'options_low', 'options_high', 'xi', 'alpha', 'beta', 'alpha2', 'beta2'],  // hidden from first plot
+      1: ['rel', 'crit_rel', 'num_leases', 'surplus']   // hidden from second plot
+    }
+
+  // initialize clustering
+  // var k = 4;
+  // update_cluster_slider(k);
+  // var cluster_vars =
+  // var cluster_vars = {
+  //   'economy (mpg)': d3.select("#econ_weight_slider").property("value"),
+  //   'cylinders': d3.select("#cyl_weight_slider").property("value"),
+  //   'displacement (cc)': d3.select("#displ_weight_slider").property("value"),
+  //   'power (hp)': d3.select("#power_weight_slider").property("value")
+  // };
+
+  // create Parasol object, add grid, link, and perform clustering
+  var ps = Parasol(data)('.parcoords')
+            .attachGrid({container: '#grid'})
+            .linked()
+            .hideAxes(axes_to_hide)
+            .cluster({k: 3, hidden: true})
+
+  ps = update_and_render_plots(ps);
+
+  // scale decisions appropriately
+  // TODO: don't hardcode these scales - calculate maximum value
+  ps.charts[1].scale('options_low', [0, 20533])
+    .scale('options_high', [0, 20533])
+    .scale('alpha', [1.0, 2.043])
+    .scale('beta', [1.0, 2.043])
+    .scale('alpha2', [1.0, 2.043])
+    .scale('beta2', [1.0, 2.043])
+
+  ps.charts.forEach(
+    (pc) => {
+         pc.smoothness(0)
+         .render()  // divide by a hundred to get decimals
+     });
+
+
+
+
+   // update clusters and slider text when slider changes
+   d3.select('#cluster_button').on('click', function() {
+     var cluster_vars = get_cluster_vars();  // get variables for clustering from checkboxes
+     // debugger;
+     ps.cluster({k: 3, vars: cluster_vars, hidden: true});
+   });
+
+  // // update clusters and slider text when slider changes
+  // d3.select('#nClust').on('input', function() {
+  //   update_cluster_slider(+this.value);  // update slider text
+  //   ps.cluster({k: parseInt(this.value), hidden: false});
+  // });
+
+  // // bundling strength slider
+  // d3.select('#bundling').on('input', function() {
+  //   ps.charts.forEach(
+  //     (pc) => {
+  //       pc.bundlingStrength(0)
+  //       .bundleDimension('cluster')
+  //       .render()  // divide by a hundred to get decimals
+  //     });
+  // });
+
+  // // smoothness
+  // d3.select("#smoothness").on('input', function() {
+  //   ps.charts.forEach(
+  //     (pc) => {
+  //       pc.smoothness(this.value/100)
+  //       .render()  // divide by a hundred to get decimals
+  //     });
+  // });
+});
+
+function update_and_render_plots(ps) {
+  // apply Parcoords API to update and render plots
+  ps.charts.forEach(
+    (pc) => {
+        pc.alpha(0.45)  // change transparency
+        .reorderable()  // make axes dynamically reorderable
+        .render()
+        .updateAxes(0);
+    }
+  )
+  return ps;
+}
+
+function get_cluster_vars() {
+  // create an array of variables that are checked for clustering
+  var checked_vars = [];
+  var checkbox_ids = ["#obj_box", "#dec_box"];
+  var obj_names = ["rel", "crit_rel", "num_leases", "surplus", "drop",
+  "cost", "cost_var", "dr_trans"];
+  var dec_names = ["rights", "options_low", "options_high", "xi", "alpha",
+  "beta", "alpha2", "beta2"];
+
+  // get whether each checkbox is checked, if so, add variables to cluster_vars
+  // include objectives, if checked
+  if (d3.select(checkbox_ids[0]).property("checked") === true) {
+    for (i = 0; i < obj_names.length; i++) {
+      checked_vars.push(obj_names[i]);
+    }
+  }
+  // include decisions, if checked
+  if (d3.select(checkbox_ids[1]).property("checked") === true) {
+    for (i = 0; i < dec_names.length; i++) {
+      checked_vars.push(dec_names[i]);
+    }
+  }
+
+  return checked_vars;
+}
+
+// // update clustering
+// function update_cluster_slider(nClust) {
+//   // adjust the text on the range slider
+//   d3.select("#nClust-value").text(nClust);
+//   d3.select("#nClust").property("value", nClust);
+// }
+
+</script>
