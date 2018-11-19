@@ -76,7 +76,7 @@ d3.csv('data/lrgv_new-names.csv')
 
   // specify layout
   var axes_to_hide = {
-      0: ['rights (af)', 'opt. low (af)', 'opt. high (af)', 'xi (-)', 'alpha (-)', 'beta (-)', 'alpha2 (-)', 'beta2 (-)'],  // hidden from first plot
+      0: ['rights (af)', 'opt. low (af)', 'opt. high (af)', 'xi (-)', 'alpha 1-4 (-)', 'beta 1-4 (-)', 'alpha 5-12 (-)', 'beta 5-12 (-)'],  // hidden from first plot
       // 1: ['rel', 'crit_rel', 'num_leases', 'surplus']   // hidden from second plot
       1: ['rel. (-)', 'crit. rel. (-)', 'leases (#)', 'surplus (af)']
     }
@@ -94,10 +94,10 @@ d3.csv('data/lrgv_new-names.csv')
   // TODO: don't hardcode these scales - calculate maximum value
   ps.charts[1].scale('opt. low (af)', [0, 20533])
     .scale('opt. high (af)', [0, 20533])
-    .scale('alpha (-)', [0.97, 2.043])
-    .scale('beta (-)', [0.97, 2.043])
-    .scale('alpha2 (-)', [0.97, 2.043])
-    .scale('beta2 (-)', [0.97, 2.043])
+    .scale('alpha 1-4 (-)', [0.97, 2.043])
+    .scale('beta 1-4 (-)', [0.97, 2.043])
+    .scale('alpha 5-12 (-)', [0.97, 2.043])
+    .scale('beta 5-12 (-)', [0.97, 2.043])
 
   // ps.charts.forEach(
   //   (pc) => {
@@ -155,7 +155,7 @@ function update_and_render_plots(ps) {
         pc.alpha(0.45)  // change transparency
         .reorderable()  // make axes dynamically reorderable
         .flip('rel. (-)')
-        .flip('crit. rel. (-)')
+        // .flip('crit. rel. (-)')
         .render()
         .updateAxes(0);
     }
@@ -170,7 +170,7 @@ function get_cluster_vars() {
   var obj_names = ["rel. (-)", "crit. rel. (-)", "leases (#)", "surplus (af)",
   "dropped (af)", "cost ($)", "cost var. (-)", "dr. trans. ($)"];
   var dec_names = ["rights (af)", "opt. low (af)", "opt. high (af)", "xi (-)",
-  "alpha (-)", "beta (-)", "alpha2 (-)", "beta2 (-)"];
+  "alpha 1-4 (-)", "beta 1-4 (-)", "alpha 5-12 (-)", "beta 5-12 (-)"];
 
   // get whether each checkbox is checked, if so, add variables to cluster_vars
   // include objectives, if checked
